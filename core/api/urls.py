@@ -18,7 +18,6 @@ def ping(request: HttpRequest) -> PingResponseSchema:
 
 api.add_router('v1/', v1_router)
 
-
 urlpatterns = [
     path("", api.urls),
 ]

@@ -1,6 +1,7 @@
 from django.db import models
 
 from core.apps.common.models import TimedBaseModel
+from core.apps.courses.entities.courses import Course as CourseEntity
 
 
 class Course(TimedBaseModel):
@@ -16,6 +17,15 @@ class Course(TimedBaseModel):
         verbose_name='Is the course visible in the system',
         default=True
     )
+
+    def to_entity(self) -> CourseEntity:
+        return CourseEntity(
+            id=self.id,
+            title=self.title,
+            description=self.description,
+            created_at=self.created_at,
+            updated_at=self.updated_at
+        )
 
     def __str__(self) -> str:
         return self.title
