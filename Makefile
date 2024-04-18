@@ -28,6 +28,14 @@ storages-logs:
 app:
 	${DC} -f ${APP_FILE} -f ${STORAGES_FILE} ${ENV_FILE} up -d
 
+.PHONY: app-restart
+app-restart:
+	${DC} -f ${APP_FILE} -f ${STORAGES_FILE} ${ENV_FILE} restart
+
+.PHONY: app-rebuild
+app-rebuild:
+	${DC} -f ${APP_FILE} -f ${STORAGES_FILE} ${ENV_FILE} build
+
 .PHONY: app-logs
 app-logs:
 	${LOGS} ${APP_CONTAINER} -f
