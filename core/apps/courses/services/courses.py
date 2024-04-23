@@ -1,4 +1,7 @@
-from abc import ABC, abstractmethod
+from abc import (
+    ABC,
+    abstractmethod,
+)
 from typing import Iterable
 
 from django.db.models import Q
@@ -11,7 +14,11 @@ from core.apps.courses.models.courses import Course as CourseModel
 
 class BaseCourseService(ABC):
     @abstractmethod
-    def get_course_list(self, filters: CourseFilters, pagination: PaginationIn) -> Iterable[Course]:
+    def get_course_list(
+            self,
+            filters: CourseFilters,
+            pagination: PaginationIn,
+    ) -> Iterable[Course]:
         ...
 
     @abstractmethod
@@ -20,18 +27,25 @@ class BaseCourseService(ABC):
 
 
 class ORMCourseService(BaseCourseService):
-
     @staticmethod
     def _build_course_query(filters: CourseFilters) -> Q:
         query = Q(is_visible=True)
 
         if filters.search is not None:
-            query &= (Q(title__icontains=filters.search) | Q(description__icontains=filters.search))
+            query &= Q(title__icontains=filters.search) | Q(
+                description__icontains=filters.search,
+            )
         return query
 
-    def get_course_list(self, filters: CourseFilters, pagination: PaginationIn) -> Iterable[Course]:
+    def get_course_list(
+            self,
+            filters: CourseFilters,
+            pagination: PaginationIn,
+    ) -> Iterable[Course]:
         query = self._build_course_query(filters)
-        qs = CourseModel.objects.filter(query)[pagination.offset:pagination.offset + pagination.limit]
+        qs = CourseModel.objects.filter(query)[
+             pagination.offset: pagination.offset + pagination.limit
+        ]
 
         return [course.to_entity() for course in qs]
 

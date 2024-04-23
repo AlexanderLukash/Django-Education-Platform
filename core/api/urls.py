@@ -1,12 +1,10 @@
 from django.http import HttpRequest
 from django.urls import path
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
-
 from ninja import NinjaAPI
 
 from core.api.schemas import PingResponseSchema
-
 from core.api.v1.urls import router as v1_router
+
 
 api = NinjaAPI()
 

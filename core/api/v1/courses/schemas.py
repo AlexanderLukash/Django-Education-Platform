@@ -6,7 +6,7 @@ from core.apps.courses.entities.courses import Course as CourseEntity
 
 
 class CourseSchema(BaseModel):
-    id: int
+    id: int  # noqa
     title: str
     description: str
     created_at: datetime
@@ -19,10 +19,8 @@ class CourseSchema(BaseModel):
             title=entity.title,
             description=entity.description,
             created_at=entity.created_at,
-            updated_at=entity.updated_at
+            updated_at=entity.updated_at,
         )
 
 
 CourseListSchema = list[CourseSchema]
-
-

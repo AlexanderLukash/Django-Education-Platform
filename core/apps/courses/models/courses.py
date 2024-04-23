@@ -11,11 +11,11 @@ class Course(TimedBaseModel):
     )
     description = models.TextField(
         verbose_name='Course description',
-        blank=True
+        blank=True,
     )
     is_visible = models.BooleanField(
         verbose_name='Is the course visible in the system',
-        default=True
+        default=True,
     )
 
     def to_entity(self) -> CourseEntity:
@@ -24,7 +24,7 @@ class Course(TimedBaseModel):
             title=self.title,
             description=self.description,
             created_at=self.created_at,
-            updated_at=self.updated_at
+            updated_at=self.updated_at,
         )
 
     def __str__(self) -> str:
