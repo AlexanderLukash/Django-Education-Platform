@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     # first party
     'core.apps.courses',
+    'core.apps.members',
 ]
 
 MIDDLEWARE = [
