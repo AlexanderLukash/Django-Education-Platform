@@ -3,6 +3,7 @@ from uuid import uuid4
 from django.db import models
 
 from core.apps.common.models import TimedBaseModel
+from core.apps.members.entities.members import MemberEntity
 
 
 class Member(TimedBaseModel):
@@ -18,8 +19,14 @@ class Member(TimedBaseModel):
         default=uuid4,
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.phone
+
+    def to_entity(self) -> MemberEntity:
+        return MemberEntity(
+            phone=self.phone,
+            created_at=self.created_at,
+        )
 
     class Meta:
         verbose_name = "Member"

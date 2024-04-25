@@ -20,7 +20,7 @@ class BaseAuthService(ABC):
         ...
 
     @abstractmethod
-    def confirm(self, token: str):
+    def confirm(self, code: str, phone: str):
         ...
 
 
@@ -28,7 +28,9 @@ class AuthService(BaseAuthService):
     def authorize(self, phone: str):
         member = self.member_service.get_or_create(phone)
         code = self.codes_service.generate_code(member)
-        self.sender_service.send_code(code)
+        self.sender_service.send_code(code, member)
 
-    def confirm(self, token: str):
-        ...
+    def confirm(self, code: str, phone: str):
+        member = self.member_service.get(phone)
+        self.codes_service.validate_code(code, member)
+        return self.member_service.generate_token(member)
