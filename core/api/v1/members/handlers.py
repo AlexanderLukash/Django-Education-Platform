@@ -10,10 +10,8 @@ from core.api.v1.members.schemas import (
     TokenOutSchema,
 )
 from core.apps.common.exceptions import ServiceException
-from core.apps.members.services.auth import AuthService
-from core.apps.members.services.codes import DjangoCacheCodeService
-from core.apps.members.services.members import ORMMemberService
-from core.apps.members.services.senders import DummySenderService
+from core.apps.members.services.auth import BaseAuthService
+from core.project.containers import get_container
 
 
 router = Router(
@@ -23,11 +21,9 @@ router = Router(
 
 @router.post('auth', response=ApiResponse[AuthOutSchema], operation_id='authorize')
 def auth_handler(request: HttpRequest, schema: AuthInSchema) -> ApiResponse[AuthOutSchema]:
-    service = AuthService(
-        member_service=ORMMemberService(),
-        codes_service=DjangoCacheCodeService(),
-        sender_service=DummySenderService(),
-    )
+    container = get_container()
+    service: BaseAuthService = container.resolve(BaseAuthService)
+
     service.authorize(phone=schema.phone)
     return ApiResponse(
         data=AuthOutSchema(
@@ -38,11 +34,9 @@ def auth_handler(request: HttpRequest, schema: AuthInSchema) -> ApiResponse[Auth
 
 @router.post('confirm', response=ApiResponse[TokenOutSchema], operation_id='confirmCode')
 def get_token_handler(request: HttpRequest, schema: TokenInSchema) -> ApiResponse[TokenOutSchema]:
-    service = AuthService(
-        member_service=ORMMemberService(),
-        codes_service=DjangoCacheCodeService(),
-        sender_service=DummySenderService(),
-    )
+    container = get_container()
+    service: BaseAuthService = container.resolve(BaseAuthService)
+
     try:
         token = service.confirm(code=schema.code, phone=schema.phone)
     except ServiceException as exception:

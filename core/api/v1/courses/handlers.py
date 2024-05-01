@@ -14,10 +14,8 @@ from core.api.schemas import (
 )
 from core.api.v1.courses.filters import CourseFilters
 from core.api.v1.courses.schemas import CourseSchema
-from core.apps.courses.services.courses import (
-    BaseCourseService,
-    ORMCourseService,
-)
+from core.apps.courses.services.courses import BaseCourseService
+from core.project.containers import get_container
 
 
 router = Router(
@@ -27,12 +25,16 @@ router = Router(
 
 @router.get('', response=ApiResponse[ListPaginatedResponse[CourseSchema]])
 def get_courses_list_handler(
-    request: HttpRequest,
-    filters: Query[CourseFilters],
-    pagination_in: Query[PaginationIn],
+        request: HttpRequest,
+        filters: Query[CourseFilters],
+        pagination_in: Query[PaginationIn],
 ) -> ApiResponse[ListPaginatedResponse[CourseSchema]]:
-    service: BaseCourseService = ORMCourseService()
-    course_list = service.get_course_list(filters=filters, pagination=pagination_in)
+    container = get_container()
+    service: BaseCourseService = container.resolve(BaseCourseService)
+
+    course_list = service.get_course_list(
+        filters=filters, pagination=pagination_in,
+    )
     course_count = service.get_course_count(filters=filters)
     items = [CourseSchema.from_entity(obj) for obj in course_list]
     pagination_out = PaginationOut(
