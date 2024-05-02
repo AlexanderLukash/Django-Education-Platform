@@ -7,8 +7,8 @@ from typing import Iterable
 from django.db.models import Q
 
 from core.api.filters import PaginationIn
-from core.api.v1.courses.filters import CourseFilters
 from core.apps.courses.entities.courses import Course
+from core.apps.courses.filters.courses import CourseFilters
 from core.apps.courses.models.courses import Course as CourseModel
 
 

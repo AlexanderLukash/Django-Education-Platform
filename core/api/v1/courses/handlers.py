@@ -14,6 +14,7 @@ from core.api.schemas import (
 )
 from core.api.v1.courses.filters import CourseFilters
 from core.api.v1.courses.schemas import CourseSchema
+from core.apps.courses.filters.courses import CourseFilters as CourseFiltersEntity
 from core.apps.courses.services.courses import BaseCourseService
 from core.project.containers import get_container
 
@@ -33,7 +34,8 @@ def get_courses_list_handler(
     service: BaseCourseService = container.resolve(BaseCourseService)
 
     course_list = service.get_course_list(
-        filters=filters, pagination=pagination_in,
+        filters=CourseFiltersEntity(search=filters.search),
+        pagination=pagination_in,
     )
     course_count = service.get_course_count(filters=filters)
     items = [CourseSchema.from_entity(obj) for obj in course_list]
