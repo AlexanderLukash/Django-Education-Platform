@@ -6,7 +6,10 @@ from core.api.schemas import PingResponseSchema
 from core.api.v1.urls import router as v1_router
 
 
-api = NinjaAPI()
+api = NinjaAPI(
+    title="Django Education Platform API",
+    description="This is a API with dynamic OpenAPI info section.",
+)
 
 
 @api.get("/ping", response=PingResponseSchema)

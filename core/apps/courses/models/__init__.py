@@ -1,2 +1,2 @@
 from .courses import Course  # noqa
-from .reviews import CourseReview  # noqa
+from .reviews import CourseReviewModel  # noqa

@@ -4,6 +4,13 @@ from core.apps.courses.services.courses import (
     BaseCourseService,
     ORMCourseService,
 )
+from core.apps.courses.services.reviews import (
+    BaseCourseReviewService,
+    BaseCourseReviewValidator,
+    CourseReviewValidatorService,
+    ORMCourseReviewService,
+)
+from core.apps.courses.use_cases.reviews.create import CreateCourseReviewUseCase
 from core.apps.members.services.auth import (
     AuthService,
     BaseAuthService,
@@ -35,5 +42,8 @@ def initialize_container() -> punq.Container:
     container.register(BaseCodeService, DjangoCacheCodeService)
     container.register(BaseSenderService, DummySenderService)
     container.register(BaseAuthService, AuthService)
+    container.register(BaseCourseReviewService, ORMCourseReviewService)
+    container.register(BaseCourseReviewValidator, CourseReviewValidatorService)
+    container.register(CreateCourseReviewUseCase)
 
     return container

@@ -5,6 +5,7 @@ from abc import (
 from uuid import uuid4
 
 from core.apps.members.entities.members import MemberEntity
+from core.apps.members.exceptions.members import MemberTokenInvalidException
 from core.apps.members.models import Member as MemberModel
 
 
@@ -19,6 +20,10 @@ class BaseMemberService(ABC):
 
     @abstractmethod
     def get(self, phone: str) -> MemberEntity:
+        ...
+
+    @abstractmethod
+    def get_by_token(self, token: str) -> MemberEntity:
         ...
 
 
@@ -37,3 +42,10 @@ class ORMMemberService(BaseMemberService):
             token=new_token,
         )
         return new_token
+
+    def get_by_token(self, token: str) -> MemberEntity:
+        try:
+            user_dto = MemberModel.objects.get(token=token)
+        except MemberModel.DoesNotExist:
+            raise MemberTokenInvalidException(token=token)
+        return user_dto.to_entity()

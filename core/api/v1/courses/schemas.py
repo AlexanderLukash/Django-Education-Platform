@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from core.apps.courses.entities.courses import Course as CourseEntity
+from core.apps.courses.entities.courses import CourseEntity as CourseEntity
 
 
 class CourseSchema(BaseModel):

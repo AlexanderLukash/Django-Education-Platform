@@ -7,7 +7,8 @@ from typing import Iterable
 from django.db.models import Q
 
 from core.api.filters import PaginationIn
-from core.apps.courses.entities.courses import Course
+from core.apps.courses.entities.courses import CourseEntity
+from core.apps.courses.exceptions.courses import CourseNotFoundException
 from core.apps.courses.filters.courses import CourseFilters
 from core.apps.courses.models.courses import Course as CourseModel
 
@@ -18,11 +19,15 @@ class BaseCourseService(ABC):
             self,
             filters: CourseFilters,
             pagination: PaginationIn,
-    ) -> Iterable[Course]:
+    ) -> Iterable[CourseEntity]:
         ...
 
     @abstractmethod
     def get_course_count(self, filters: CourseFilters) -> int:
+        ...
+
+    @abstractmethod
+    def get_course_by_id(self, course_id: int) -> CourseEntity:
         ...
 
 
@@ -41,7 +46,7 @@ class ORMCourseService(BaseCourseService):
             self,
             filters: CourseFilters,
             pagination: PaginationIn,
-    ) -> Iterable[Course]:
+    ) -> Iterable[CourseEntity]:
         query = self._build_course_query(filters)
         qs = CourseModel.objects.filter(query)[
              pagination.offset: pagination.offset + pagination.limit
@@ -52,3 +57,10 @@ class ORMCourseService(BaseCourseService):
     def get_course_count(self, filters: CourseFilters) -> int:
         query = self._build_course_query(filters)
         return CourseModel.objects.filter(query).count()
+
+    def get_course_by_id(self, course_id: int) -> CourseEntity:
+        try:
+            course_dto = CourseModel.objects.get(id=course_id)
+        except CourseModel.DoesNotExist:
+            raise CourseNotFoundException(course_id=course_id)
+        return course_dto.to_entity()

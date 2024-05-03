@@ -2,12 +2,12 @@ from django.contrib import admin
 
 from core.apps.courses.models import (
     Course,
-    CourseReview,
+    CourseReviewModel,
 )
 
 
 class CourseReviewInline(admin.TabularInline):
-    model = CourseReview
+    model = CourseReviewModel
     extra = 0
     readonly_fields = ('member', 'rating', 'text')
 
@@ -19,7 +19,7 @@ class CourseAdmin(admin.ModelAdmin):
     inlines = (CourseReviewInline,)
 
 
-@admin.register(CourseReview)
+@admin.register(CourseReviewModel)
 class CourseReviewAdmin(admin.ModelAdmin):
     list_display = ('id', 'member', 'course', 'is_approved')
     list_select_related = ('member', 'course')

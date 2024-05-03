@@ -1,9 +1,12 @@
 from django.db import models
 
 from core.apps.common.models import TimedBaseModel
+from core.apps.courses.entities.courses import CourseEntity
+from core.apps.courses.entities.reviews import CourseReviewEntity
+from core.apps.members.entities.members import MemberEntity
 
 
-class CourseReview(TimedBaseModel):
+class CourseReviewModel(TimedBaseModel):
     member = models.ForeignKey(
         to='members.Member',
         verbose_name='Reviewer',
@@ -28,6 +31,33 @@ class CourseReview(TimedBaseModel):
     is_approved = models.BooleanField(
         default=False,
     )
+
+    def __str__(self) -> str:
+        return f'{self.course.title, self.member.phone}'
+
+    def to_entity(self) -> CourseReviewEntity:
+        return CourseReviewEntity(
+            id=self.id,
+            rating=self.rating,
+            text=self.text,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+        )
+
+    @classmethod
+    def from_entity(
+            cls,
+            review: CourseReviewEntity,
+            course: CourseEntity,
+            member: MemberEntity,
+    ) -> 'CourseReviewModel':
+        return cls(
+            pk=review.id,
+            course_id=course.id,
+            member_id=member.id,
+            rating=review.rating,
+            text=review.text,
+        )
 
     class Meta:
         verbose_name = 'Course review'

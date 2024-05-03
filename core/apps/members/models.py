@@ -26,6 +26,7 @@ class Member(TimedBaseModel):
         return MemberEntity(
             phone=self.phone,
             created_at=self.created_at,
+            id=self.id,
         )
 
     class Meta:

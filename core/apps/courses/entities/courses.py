@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 @dataclass
-class Course:
+class CourseEntity:
     id: int # noqa
     title: str
     description: str
